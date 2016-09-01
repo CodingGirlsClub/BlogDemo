@@ -55,6 +55,7 @@ git push -u origin master
 ## 4. 用户注册&登录
 使用[devise](https://github.com/plataformatec/devise)配置用户注册和登录功能。
  看「GEtting started」完成登录功能：
+
 1. 在Gemfile文件中添加 `gem 'devise'`, 然后在命令行运行 `bundle install`
 2. 在命令行运行 `rails g devise:install`;
 3. 在文件<kbd>config/environments/development.rb</kbd> 中添加：  
@@ -81,9 +82,9 @@ git push -u origin master
       end
     end
     ```
-7. 在命令行输入 `rake routes` ，可以看到安装devise之后允许的路径，如下图：
-6. 修改导航栏中的用户和注册路径，启动服务器，测试注册和登录功能
-7. git commit
+8. 在命令行输入 `rake routes` ，可以看到安装devise之后允许的路径，如下图：
+9. 修改导航栏中的用户和注册路径，启动服务器，测试注册和登录功能
+10. git commit
 
 ## 5. Articles MVC实践
 1. 修改导航栏中Articles的路径   
