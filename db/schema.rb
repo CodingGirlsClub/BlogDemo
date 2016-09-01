@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160901141052) do
+ActiveRecord::Schema.define(version: 20160901141339) do
 
   create_table "articles", force: :cascade do |t|
     t.string   "title"
-    t.text     "cotent"
+    t.text     "content"
     t.boolean  "is_public"
     t.integer  "category_id"
     t.integer  "user_id"
