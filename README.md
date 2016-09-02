@@ -17,7 +17,7 @@ git push -u origin master
 ## 3.  制作首页(静态页面)
  1. 在 <kbd>config/routes.rb</kbd>文件中添加 `root to: 'visitors#index'`
  2. `rails s` 启动服务器，访问 `http://localhost:3000`。 遇到报错，提示 `没有初始化的常量 VisitorsController` （记得git commit）
- 插入报错图片
+ ![](http://ww3.sinaimg.cn/large/7853084cgw1f7f26szzcbj20sa0d6401.jpg)
  3. 命令行运行 `rails g controller visitors index`； 再访问 `http://localhost:3000`， 无报错信息。
  4. 使用[Bootstrap](http://getbootstrap.com)制作前端
     - 观看[Gorails视频](https://gorails.com/episodes/styling-with-bootstrap-sass) （观看时把字幕打开）， 以及参考 [bootstrap-sass](https://github.com/twbs/bootstrap-sass)
@@ -34,7 +34,7 @@ git push -u origin master
         ```
       - `git commit -m 'add bootstrap'`
     - `http://www.bootcss.com/p/layoutit/` 可视化布局首页(我去这个地方下载了一个博客模板，省掉了自己写前端 https://startbootstrap.com/template-categories/all/ 。这个可能会增加复杂度，建议大家还是用模板工具，搭建简单的页面即可)
-    插入图片
+    ![](http://ocuwjo7n4.bkt.clouddn.com/2016-09-02-WechatIMG19.jpeg)
     - 下载代码，粘贴到 `app/views/visitors/index.html.erb`
     - 修改上一步的代码，并把引用的图片放到 `app/assetts/images`文件夹中
       - 创建共享文件夹 `mkdir app/views/shared`
@@ -70,7 +70,9 @@ git push -u origin master
     </div>
     ```
       然后在运行 `rails db:migrate` 迁移数据库
-7.  permit additional parameters (the lazy way™), you can do so using a simple before filter in your ApplicationController:
+7.  在文件<kbd>app/application_controller.rb</kbd>增添如下代码，目的是让devise的用户注册功能能写入数据库字段 `:username`
+    > permit additional parameters (the lazy way™), you can do so using a simple before filter in your ApplicationController:
+
     ```
     class ApplicationController < ActionController::Base
       before_action :configure_permitted_parameters, if: :devise_controller?
@@ -83,10 +85,22 @@ git push -u origin master
     end
     ```
 8. 在命令行输入 `rake routes` ，可以看到安装devise之后允许的路径，如下图：
-9. 修改导航栏中的用户和注册路径，启动服务器，测试注册和登录功能
+9. 修改导航栏中的用户和注册路径，启动服务器，测试注册和登录功能. 请参考我的源码。
 10. git commit
 
 ## 5. Articles MVC实践
+![](http://ocuwjo7n4.bkt.clouddn.com/2016-09-02-railsmvc3.png)
+> 网站 = 算法 + 数据（数据是核心）
+> MVC就是算法，我们写算法的步骤就如上图。
+> 1. 从步骤1开始，浏览器输入网址。
+> 2. 浏览器到路由（config/routes.rb)
+> 3. 路由解析浏览器传过来的网址，传到相对应controller里面的action；
+> 4. action里面的方法决定从Model里面拿什么数据回来；
+> 5. 在Model层面写好模型的数据类型以及相关模型的关联关系；
+> 6. 把需要的数据给controller
+> 7. controller拿到数据以后，保存在实例变量里面，传给view层；
+> view层渲染上html/css/javascripts，再返回给controller；
+> 8. controller发送给浏览器
 1. 修改导航栏中Articles的路径   
     ```
     <li class="btn btn-white btn-simple">
@@ -94,10 +108,12 @@ git push -u origin master
     </li>
     ```
 2. 刷新浏览器，点击导航栏<kbd>Articles</kbd>，跳转到 `http://localhost:3000/articles`，报错，如下图：
+![](http://ocuwjo7n4.bkt.clouddn.com/2016-09-02-BlogDemo4.jpeg)
 3.  `routes.rb` 中添加 `resources :articles`
 4. 启动服务器 `rails s`， 访问 `http://localhost:3000/articles`, **找不到路径**错误已解决。但有一个新的 **找不到controller** 报错，报错如下图
- 插入图
+  ![](http://ocuwjo7n4.bkt.clouddn.com/2016-09-02-BlogDemo2.jpeg)
 5. 在命令行输入 `rails g controller articles`, 刷新浏览器。报错，提示controller里面没有 ‘index’ action，如下图：
+![](http://ocuwjo7n4.bkt.clouddn.com/2016-09-02-BlogDemo6.jpeg)
 6. 在 <kbd>app/controllers/articles_controller.rb</kbd> 文件夹中添加index方法
     ```
     class ArticlesController < ApplicationController
@@ -107,14 +123,14 @@ git push -u origin master
     ```
     再刷新浏览器。报错，提示：没有 index template
 
-7. 在命令行中输入 `touch app/views/articles/index.html.erb`
+7. 新建index页面：在命令行中输入 `touch app/views/articles/index.html.erb`
 8. 再使用[可视化bootstrap工具](http://www.bootcss.com/p/layoutit/)制作文章页面，把代码复制过来。如下图效果：
 9. 上面的还都是静态页面，没有model。现在我们开始**建立artile的model及其与其他模型的关联**:   
 
-  -  在命令行输入 `rails g model Article title:string content:text is_public:boolean category:references user:belongs_to`
-  - `rails model Category name:string` : Article模型和Category模型是关联模型
-  - `rails db:migrate`
-  - 在 <kbd>app/models/category.rb</kbd> 添加内容如下
+  -  创建Article Model：在命令行输入 `rails g model Article title:string content:text is_public:boolean category:references user:belongs_to`
+  - 创建Category Model：`rails model Category name:string` : Article模型和Category模型是关联模型
+  - 数据迁移：`rails db:migrate`
+  - 模型关系：在 <kbd>app/models/category.rb</kbd> 添加内容如下
     ```
     class Category < ApplicationRecord
       has_many :articles
@@ -130,7 +146,7 @@ git push -u origin master
       has_many :articles
     end
     ```
-  - 在<kbd>db/seeds.rb</kbd> 中添加如下内容
+  - 初始化数据：在<kbd>db/seeds.rb</kbd> 中添加如下内容
     ```
     Category.find_or_create_by(name: "Science")
     Category.find_or_create_by(name: "Technology")
@@ -139,14 +155,14 @@ git push -u origin master
     Category.find_or_create_by(name: "Math")
     ```
      在命令行运行 `rails db:seed`  初始化categories表格的数据
-  - 完善<kbd>articles_controller.rb</kbd>中的index方法：从数据库中读入数据（C-M的数据交流）
+  - 让controller从model里面拿数据：完善<kbd>articles_controller.rb</kbd>中的index方法：从数据库中读入数据（C-M的数据交流）
     ```
     def index
       @articles = Article.where(is_public: true).order('created_at DESC')    
     end
     ```
     - 完善 <kbd>app/views/articles/index.html.erb</kbd>
-10. 做完article的CRUD功能, 从controller到view的顺序更新。分别是：`show -> edit -> update -> new -> create -> destroy`
+10. 按照index的步骤做完article的CRUD功能, 从controller到view的顺序更新。分别是：`show -> edit -> update -> new -> create -> destroy`
 - show
   - 分享插件： http://www.jiathis.com
 - edit
@@ -156,11 +172,11 @@ git push -u origin master
     - http://www.printshit.me/blog/2016/05/30/how-to-use-simditor-in-rails/
     - https://ruby-china.org/topics/28467
 
-6. Comment 实践（Polymorphic Association）
-    1. Creating a Single Comment Model
-    `rails g model comment content:text commentable_id:integer commentable_type:string`
-    2. 修改 migration, 使用多态技巧polymorphic如下：
-      ```
+## 6. Comment 实践（Polymorphic Association）
+1. Creating a Single Comment Model
+`rails g model comment content:text commentable_id:integer commentable_type:string`
+2. 修改 migration, 使用多态技巧polymorphic如下：
+    ```
     class CreateComments < ActiveRecord::Migration[5.0]
       def change
         create_table :comments do |t|
@@ -175,7 +191,7 @@ git push -u origin master
     ```
     然后 `rails db:migrate`
 
-    http://railscasts.com/episodes/154-polymorphic-association-revised?view=asciicast
-    https://rubyplus.com/articles/3901-Polymorphic-Association-in-Rails-5
-    https://gorails.com/episodes/comments-with-polymorphic-associations
-    https://github.com/gorails-screencasts/gorails-episode-36
+http://railscasts.com/episodes/154-polymorphic-association-revised?view=asciicast
+https://rubyplus.com/articles/3901-Polymorphic-Association-in-Rails-5
+https://gorails.com/episodes/comments-with-polymorphic-associations
+https://github.com/gorails-screencasts/gorails-episode-36
