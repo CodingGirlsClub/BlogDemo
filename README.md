@@ -92,6 +92,7 @@ git push -u origin master
 ![](http://ocuwjo7n4.bkt.clouddn.com/2016-09-02-railsmvc3.png)
 > 网站 = 算法 + 数据（数据是核心）
 > MVC就是算法，我们写算法的步骤就如上图。
+>
 > 1. 从步骤1开始，浏览器输入网址。
 > 2. 浏览器到路由（config/routes.rb)
 > 3. 路由解析浏览器传过来的网址，传到相对应controller里面的action；
@@ -99,8 +100,9 @@ git push -u origin master
 > 5. 在Model层面写好模型的数据类型以及相关模型的关联关系；
 > 6. 把需要的数据给controller
 > 7. controller拿到数据以后，保存在实例变量里面，传给view层；
-> view层渲染上html/css/javascripts，再返回给controller；
+>   view层渲染上html/css/javascripts，再返回给controller；
 > 8. controller发送给浏览器
+
 1. 修改导航栏中Articles的路径   
     ```
     <li class="btn btn-white btn-simple">
