@@ -1,0 +1,23 @@
+<div class="well">
+  <h4>Leave a Comment</h4>
+  <!-- the array we pass to form_for so that it generates the URL correctly for the polymorphic association. -->
+  <%= form_for [@commentable, @comment] do |f| %>
+    <% if  @comment.errors.any? %>
+      <div class="erro_messages">
+        <h2>Please correct the following errors.</h2>
+        <ul>
+          <% @comment.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= f.text_area :content, rows: 5, class: 'form-control' %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
+</div>
