@@ -252,7 +252,7 @@ git push -u origin master
     ```
 6. 
 
-http://railscasts.com/episodes/154-polymorphic-association-revised?view=asciicast
-https://rubyplus.com/articles/3901-Polymorphic-Association-in-Rails-5
-https://gorails.com/episodes/comments-with-polymorphic-associations
-https://github.com/gorails-screencasts/gorails-episode-36
+- http://railscasts.com/episodes/154-polymorphic-association-revised?view=asciicast
+- https://rubyplus.com/articles/3901-Polymorphic-Association-in-Rails-5
+- https://gorails.com/episodes/comments-with-polymorphic-associations
+- https://github.com/gorails-screencasts/gorails-episode-36
