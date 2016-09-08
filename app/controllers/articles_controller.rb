@@ -7,6 +7,10 @@ class ArticlesController < ApplicationController
 
   def show
     @categories = Category.all
+    # prepare comment instance variables for comment view partials 
+    @commentable = @article 
+    @comments = @commentable.comments.order('created_at DESC') 
+    @comment = Comment.new
   end
 
   def edit

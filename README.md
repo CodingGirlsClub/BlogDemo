@@ -207,7 +207,7 @@ git push -u origin master
     resources :comments, only: [:index, :new, :create]
   end
   ```
-2. 创建controller `rails g controller comments index new create`
+2. 创建controller `rails g controller comments index new`
 3. 修改index 方法，从Comment模型读取数据
    ```
     def index
@@ -215,7 +215,7 @@ git push -u origin master
       @comments = @commentable.comments
     end
    ```
-4. 修改 app/views/comments/index.html.erb 内容如下：
+4. 修改 app/views/comments/index.html.erb 内容如下： 
     ```
     # app/views/comments/index.html.erb
     <h1>Comments</h1>
