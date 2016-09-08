@@ -175,23 +175,82 @@ git push -u origin master
     - https://ruby-china.org/topics/28467
 
 ## 6. Comment 实践（Polymorphic Association）
-1. Creating a Single Comment Model
-`rails g model comment content:text commentable_id:integer commentable_type:string`
-2. 修改 migration, 使用多态技巧polymorphic如下：
+#### 6.1 Creating a Single Comment Model
+1. 创建模型：命令行中运行 `rails g model Comment content:text commentable:references{polymorphic} user:belongs_to`
+2. 添加相关模型关联关系：
     ```
-    class CreateComments < ActiveRecord::Migration[5.0]
-      def change
-        create_table :comments do |t|
-          t.text :content
-          t.belongs_to :commentable, polymorphic: true
-
-          t.timestamps
-        end
-        add_index :comments, [:commentable_id, :commentable_type]
-      end
+    # app/model/user.rb
+    class User < ApplicationRecord
+      # Include default devise modules. Others available are:
+      # :confirmable, :lockable, :timeoutable and :omniauthable
+      devise :database_authenticatable, :registerable,
+             :recoverable, :rememberable, :trackable, :validatable
+      has_many :articles  
+      has_many :comments, as: :commentable       
     end
     ```
-    然后 `rails db:migrate`
+
+    ```
+    class Article < ApplicationRecord
+      belongs_to :category
+      belongs_to :user
+      has_many :comments, as: :commentable
+    end
+    ```
+
+3. 然后 `rails db:migrate`
+#### 6.2 Using a Polymorphic Association in our Application
+1. 修改路由
+  ```
+  # config/routes.rb
+  resources :articles do
+    resources :comments, only: [:index, :new, :create]
+  end
+  ```
+2. 创建controller `rails g controller comments index new create`
+3. 修改index 方法，从Comment模型读取数据
+   ```
+    def index
+      @commentable = Article.find(params[:article_id])
+      @comments = @commentable.comments
+    end
+   ```
+4. 修改 app/views/comments/index.html.erb 内容如下：
+    ```
+    # app/views/comments/index.html.erb
+    <h1>Comments</h1>
+    <%= render 'comments' %>
+    ```
+    ```
+    # app/views/comments/_comment.html.erb
+    <!-- Comment -->
+    <% @comments.each do |comment| %>
+      <div class="media">
+        <div class="media-body">
+            <h4 class="media-heading"> <%= comment.user.username %>
+                <small>comment on <%= comment.created_at.strftime("%B, %d, %Y %I:%M %p") %></small>
+            </h4>
+            <%= simple_format comment.content %>
+        </div>
+      </div>
+    <% end %>
+    ```
+4. 在 `app/views/articles/show.html.erb` 文章内容下添加：
+  ```
+  <%= render "comments/comments" %>
+  ```
+  启动服务器， 访问`http://localhost:3000/articles/1`,报错：提示each的对象 @comments 不能为空。因此我们要在article controller的show action里面添加存取出@comments的方法 
+5. 更改 `app/controllers/articles_controller.rb` show de action
+    ```
+    def show
+      @categories = Category.all
+      # prepare comment instance variables for comment view partials
+      @commentable = @article
+      @comments = @commentable.comments.order('created_at DESC')
+      @comment = Comment.new
+    end
+    ```
+6. 
 
 http://railscasts.com/episodes/154-polymorphic-association-revised?view=asciicast
 https://rubyplus.com/articles/3901-Polymorphic-Association-in-Rails-5
