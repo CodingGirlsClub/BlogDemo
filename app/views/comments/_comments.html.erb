@@ -1,0 +1,12 @@
+# app/views/comments/_comment.html.erb
+<!-- Comment -->
+<% @comments.each do |comment| %>
+  <div class="media">
+    <div class="media-body">
+        <h4 class="media-heading"> <%= comment.user.username %>
+            <small>comment on <%= comment.created_at.strftime("%B, %d, %Y %I:%M %p") %></small>
+        </h4>
+        <%= simple_format comment.content %>
+    </div>
+  </div>
+<% end %>
